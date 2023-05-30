@@ -1,0 +1,510 @@
+Load config success
+[WARNING][2023-05-30 17:30:44][log.py:39] - Failed to import plugin createimg
+[INFO][2023-05-30 17:30:44][plugin_registry.py:23] - Plugin Selector_v0.1 registered
+[INFO][2023-05-30 17:30:44][log.py:32] - [Selector] inited
+Load config success
+[INFO][2023-05-30 17:30:44][log.py:34] - [MultiChannel] Start up chatgpt on wechat
+█[ERROR][2023-05-30 17:30:44][log.py:47] - [MultiChannel] Start up failed on wechat: Expecting value: line 1 column 1 (char 0)
+[ERROR][2023-05-30 17:30:44][log.py:45] - App startup failed!
+[ERROR][2023-05-30 17:30:44][log.py:50] - Expecting value: line 1 column 1 (char 0)
+Traceback (most recent call last):
+  File "/home/ecs-user/miniconda3/lib/python3.10/site-packages/requests/models.py", line 971, in json
+    return complexjson.loads(self.text, **kwargs)
+  File "/home/ecs-user/miniconda3/lib/python3.10/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+  File "/home/ecs-user/miniconda3/lib/python3.10/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "/home/ecs-user/miniconda3/lib/python3.10/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/ecs-user/bot-on-anything/app.py", line 42, in main
+    start_process(channel_type[0], args.config)
+  File "/home/ecs-user/bot-on-anything/app.py", line 23, in start_process
+    raise e
+  File "/home/ecs-user/bot-on-anything/app.py", line 20, in start_process
+    channel.startup()
+  File "/home/ecs-user/bot-on-anything/channel/wechat/wechat_channel.py", line 46, in startup
+    itchat.auto_login(enableCmdQR=2, hotReload=hot_reload, qrCallback=self.login)
+  File "/home/ecs-user/miniconda3/lib/python3.10/site-packages/itchat/components/register.py", line 31, in auto_login
+    self.login(enableCmdQR=enableCmdQR, picDir=picDir, qrCallback=qrCallback,
+  File "/home/ecs-user/miniconda3/lib/python3.10/site-packages/itchat/components/login.py", line 47, in login
+    uuid = push_login(self)
+  File "/home/ecs-user/miniconda3/lib/python3.10/site-packages/itchat/components/login.py", line 99, in push_login
+    r = core.s.get(url, headers=headers).json()
+  File "/home/ecs-user/miniconda3/lib/python3.10/site-packages/requests/models.py", line 975, in json
+    raise RequestsJSONDecodeError(e.msg, e.doc, e.pos)
+requests.exceptions.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+Load config success
+[WARNING][2023-05-30 17:34:36][log.py:39] - Failed to import plugin createimg
+[INFO][2023-05-30 17:34:36][plugin_registry.py:23] - Plugin Selector_v0.1 registered
+[INFO][2023-05-30 17:34:36][log.py:32] - [Selector] inited
+Load config success
+[INFO][2023-05-30 17:34:36][log.py:34] - [MultiChannel] Start up chatgpt on wechat
+█Log in time out, reloading QR code.
+uuid: wb0k2OYnhw==
+status: 408
+qrcode_link: https://login.weixin.qq.com/l/wb0k2OYnhw==
+uuid: wb0k2OYnhw==
+status: 408
+qrcode_link: https://login.weixin.qq.com/l/wb0k2OYnhw==
+uuid: wb0k2OYnhw==
+status: 408
+qrcode_link: https://login.weixin.qq.com/l/wb0k2OYnhw==
+uuid: wb0k2OYnhw==
+status: 408
+qrcode_link: https://login.weixin.qq.com/l/wb0k2OYnhw==
+uuid: wb0k2OYnhw==
+status: 408
+qrcode_link: https://login.weixin.qq.com/l/wb0k2OYnhw==
+uuid: wb0k2OYnhw==
+status: 408
+qrcode_link: https://login.weixin.qq.com/l/wb0k2OYnhw==
+uuid: wb0k2OYnhw==
+status: 408
+qrcode_link: https://login.weixin.qq.com/l/wb0k2OYnhw==
+uuid: wb0k2OYnhw==
+status: 408
+qrcode_link: https://login.weixin.qq.com/l/wb0k2OYnhw==
+uuid: wb0k2OYnhw==
+status: 408
+qrcode_link: https://login.weixin.qq.com/l/wb0k2OYnhw==
+uuid: wb0k2OYnhw==
+status: 408
+qrcode_link: https://login.weixin.qq.com/l/wb0k2OYnhw==
+uuid: wb0k2OYnhw==
+status: 408
+qrcode_link: https://login.weixin.qq.com/l/wb0k2OYnhw==
+uuid: wb0k2OYnhw==
+status: 408
+qrcode_link: https://login.weixin.qq.com/l/wb0k2OYnhw==
+uuid: wb0k2OYnhw==
+status: 400
+qrcode_link: https://login.weixin.qq.com/l/wb0k2OYnhw==
+[ERROR][2023-05-30 17:39:38][log.py:47] - [MultiChannel] Start up failed on wechat: Expecting value: line 1 column 1 (char 0)
+[ERROR][2023-05-30 17:39:38][log.py:45] - App startup failed!
+[ERROR][2023-05-30 17:39:38][log.py:50] - Expecting value: line 1 column 1 (char 0)
+Traceback (most recent call last):
+  File "/home/ecs-user/miniconda3/lib/python3.10/site-packages/requests/models.py", line 971, in json
+    return complexjson.loads(self.text, **kwargs)
+  File "/home/ecs-user/miniconda3/lib/python3.10/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+  File "/home/ecs-user/miniconda3/lib/python3.10/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "/home/ecs-user/miniconda3/lib/python3.10/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/ecs-user/bot-on-anything/app.py", line 42, in main
+    start_process(channel_type[0], args.config)
+  File "/home/ecs-user/bot-on-anything/app.py", line 23, in start_process
+    raise e
+  File "/home/ecs-user/bot-on-anything/app.py", line 20, in start_process
+    channel.startup()
+  File "/home/ecs-user/bot-on-anything/channel/wechat/wechat_channel.py", line 46, in startup
+    itchat.auto_login(enableCmdQR=2, hotReload=hot_reload, qrCallback=self.login)
+  File "/home/ecs-user/miniconda3/lib/python3.10/site-packages/itchat/components/register.py", line 31, in auto_login
+    self.login(enableCmdQR=enableCmdQR, picDir=picDir, qrCallback=qrCallback,
+  File "/home/ecs-user/miniconda3/lib/python3.10/site-packages/itchat/components/login.py", line 47, in login
+    uuid = push_login(self)
+  File "/home/ecs-user/miniconda3/lib/python3.10/site-packages/itchat/components/login.py", line 99, in push_login
+    r = core.s.get(url, headers=headers).json()
+  File "/home/ecs-user/miniconda3/lib/python3.10/site-packages/requests/models.py", line 975, in json
+    raise RequestsJSONDecodeError(e.msg, e.doc, e.pos)
+requests.exceptions.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+Load config success
+[WARNING][2023-05-30 17:47:57][log.py:39] - Failed to import plugin createimg
+[INFO][2023-05-30 17:47:57][plugin_registry.py:23] - Plugin Selector_v0.1 registered
+[INFO][2023-05-30 17:47:57][log.py:32] - [Selector] inited
+Load config success
+[INFO][2023-05-30 17:47:57][log.py:34] - [MultiChannel] Start up chatgpt on wechat
+█Please press confirm on your phone.
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Log in time out, reloading QR code.
+Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 201
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+uuid: Ac54pPQzRQ==
+status: 400
+qrcode_link: https://login.weixin.qq.com/l/Ac54pPQzRQ==
+[ERROR][2023-05-30 17:48:08][log.py:47] - [MultiChannel] Start up failed on wechat: Expecting value: line 1 column 1 (char 0)
+[ERROR][2023-05-30 17:48:08][log.py:45] - App startup failed!
+[ERROR][2023-05-30 17:48:08][log.py:50] - Expecting value: line 1 column 1 (char 0)
+Traceback (most recent call last):
+  File "/home/ecs-user/miniconda3/lib/python3.10/site-packages/requests/models.py", line 971, in json
+    return complexjson.loads(self.text, **kwargs)
+  File "/home/ecs-user/miniconda3/lib/python3.10/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+  File "/home/ecs-user/miniconda3/lib/python3.10/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "/home/ecs-user/miniconda3/lib/python3.10/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/ecs-user/bot-on-anything/app.py", line 42, in main
+    start_process(channel_type[0], args.config)
+  File "/home/ecs-user/bot-on-anything/app.py", line 23, in start_process
+    raise e
+  File "/home/ecs-user/bot-on-anything/app.py", line 20, in start_process
+    channel.startup()
+  File "/home/ecs-user/bot-on-anything/channel/wechat/wechat_channel.py", line 46, in startup
+    itchat.auto_login(enableCmdQR=2, hotReload=hot_reload, qrCallback=self.login)
+  File "/home/ecs-user/miniconda3/lib/python3.10/site-packages/itchat/components/register.py", line 31, in auto_login
+    self.login(enableCmdQR=enableCmdQR, picDir=picDir, qrCallback=qrCallback,
+  File "/home/ecs-user/miniconda3/lib/python3.10/site-packages/itchat/components/login.py", line 47, in login
+    uuid = push_login(self)
+  File "/home/ecs-user/miniconda3/lib/python3.10/site-packages/itchat/components/login.py", line 99, in push_login
+    r = core.s.get(url, headers=headers).json()
+  File "/home/ecs-user/miniconda3/lib/python3.10/site-packages/requests/models.py", line 975, in json
+    raise RequestsJSONDecodeError(e.msg, e.doc, e.pos)
+requests.exceptions.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
