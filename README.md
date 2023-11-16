@@ -4,10 +4,11 @@
 
 **模型：**
 
- - [x] [ChatGPT (gpt-3.5/4.0)](https://github.com/zhayujie/bot-on-anything#1-chatgpt)
- - [x] [GPT-3.0](https://github.com/zhayujie/bot-on-anything#2gpt-30)
- - [x] [New Bing](https://github.com/zhayujie/bot-on-anything#4newbing)
- - [x] [Google Bard](https://github.com/zhayujie/bot-on-anything#5bard)
+ - [x] [GPTs (gpt-4-1106-preview/gpt-3.5-turbo-1106)](https://github.com/franklili3/bot-on-anything#1-GPTs)
+ - [x] [ChatGPT (gpt-3.5/4.0)](https://github.com/franklili3/bot-on-anything#2-chatgpt)
+ - [x] [GPT-3.0](https://github.com/franklili3/bot-on-anything#3gpt-30)
+ - [x] [New Bing](https://github.com/franklili3/bot-on-anything#4newbing)
+ - [x] [Google Bard](https://github.com/franklili3/bot-on-anything#5bard)
 
 **应用：**
 
@@ -75,7 +76,52 @@ cp config-template.json config.json
 
 ## 二、选择模型
 
-### 1. ChatGPT
+### 1. GPTs
+
+默认模型是 `gpt-4-1106-preview`，详情参考[官方文档](https://platform.openai.com/docs/assistants/overview)，同样支持`gpt-3.5-turbo-1106`，只需修改model type参数即可。
+
+#### (1) 注册 OpenAI 账号
+
+前往 [OpenAI注册页面](https://beta.openai.com/signup) 创建账号，参考这篇 [教程](https://www.cnblogs.com/damugua/p/16969508.html) 可以通过虚拟手机号来接收验证码。创建完账号则前往 [API管理页面](https://beta.openai.com/account/api-keys) 创建一个 API Key 并保存下来，后面需要在项目中配置这个key。
+
+> 项目中使用的对话模型是 gpt-4-1106-preview，计费方式是约每 750 字 (包含请求和回复) 消耗 $0.02，图片生成是每张消耗 $0.016，账号创建有免费的 $18 额度，使用完可以更换邮箱重新注册。
+
+#### (2) 安装依赖
+
+```bash
+pip3 install --upgrade openai
+```
+> 注： openai版本需要`0.27.0`以上。如果安装失败可先升级pip，`pip3 install --upgrade pip`
+
+
+#### (3) 配置项说明
+
+```bash
+{
+  "model": {
+    "type" : "gpts",
+
+    "openai": {
+      "api_key": "YOUR API KEY",
+      "model": "gpt-4-1106-preview",                         # 模型名称
+      "proxy": "http://127.0.0.1:7890",                 # 代理地址
+      "character_desc": "",
+      "conversation_max_tokens": 1000,                  # 回复最大的字符数，为输入和输出的总数
+      "temperature":0.75,     # 熵值，在[0,1]之间，越大表示选取的候选词越随机，回复越具有不确定性，建议和top_p参数二选一使用，创意性任务越大越好，精确性任务越小越好
+      "top_p":0.7,            #候选词列表。0.7 意味着只考虑前70%候选词的标记，建议和temperature参数二选一使用
+      "frequency_penalty":0.0,            # [-2,2]之间，该值越大则越降低模型一行中的重复用词，更倾向于产生不同的内容
+      "presence_penalty":1.0,             # [-2,2]之间，该值越大则越不受输入限制，将鼓励模型生成输入中不存在的新词，更倾向于产生不同的内容
+    }
+}
+```
+ + `api_key`: 填入上面注册账号时创建的 `OpenAI API KEY`
+ + `model`: 模型名称，目前支持填入 `gpt-4-1106-preview`, `gpt-3.5-turbo-1106`
+ + `proxy`: 代理客户端的地址，详情参考  [#56](https://github.com/zhayujie/bot-on-anything/issues/56)
+ + `character_desc`: 不需要填写
+ + `max_history_num`[optional]: 对话最大记忆长度，超过该长度则清理前面的记忆。
+
+---
+### 2. ChatGPT
 
 默认模型是 `gpt-3.5-turbo`，详情参考[官方文档](https://platform.openai.com/docs/guides/chat)，同样支持`gpt-4.0`，只需修改model type参数即可。
 
@@ -121,7 +167,7 @@ pip3 install --upgrade openai
 
 ---
 
-### 2.GPT-3.0
+### 3.GPT-3.0
 
 使用的模型是 `text-davinci-003`，详情参考[官方文档]([https://platform.openai.com/docs/guides/chat](https://platform.openai.com/docs/guides/completion/introduction))。
 
@@ -144,13 +190,13 @@ pip3 install --upgrade openai
 ```
 ---
 
-### 3.文心一言 (测试版)
+### 4.文心一言 (测试版)
 
 参考: [#154](https://github.com/zhayujie/bot-on-anything/issues/154)
 
 ---
 
-### 4.NewBing
+### 5.NewBing
 
 使用的是https://github.com/acheong08/EdgeGPT 网页版逆向API
 
@@ -195,7 +241,7 @@ cookie示例:
 ```
 ---
 
-### 5.Bard
+### 6.Bard
 
 #### 配置项说明
 
