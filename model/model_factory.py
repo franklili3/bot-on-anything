@@ -21,10 +21,10 @@ def create_bot(model_type):
         from model.openai.chatgpt_model import ChatGPTModel
         return ChatGPTModel()
 
-    elif model_type == const.GPTs:
+    elif model_type == const.CHATGPT_ASSISTANT:
         # ChatGPT API (gpt-4-1106-preview)
-        from model.openai.gpts_model import GPTsModel
-        return GPTsModel()
+        from model.openai.chatgpt_assistant_model import ChatGPT_AssistantModel
+        return ChatGPT_AssistantModel()
 
     elif model_type == const.BAIDU:
         from model.baidu.yiyan_model import YiyanModel

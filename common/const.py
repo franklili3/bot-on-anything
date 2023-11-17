@@ -16,7 +16,7 @@ DISCORD = "discord"
 # model
 OPEN_AI = "openai"
 CHATGPT = "chatgpt"
-GPTs = "gpts"
+CHATGPT_ASSISTANT = "chatgpt-assistant"
 BAIDU = "baidu"
 BING = "bing"
 BARD = "bard"

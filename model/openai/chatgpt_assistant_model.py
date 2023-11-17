@@ -10,7 +10,7 @@ import time
 user_session = dict()
 
 # OpenAI Assistant模型API (可用)
-class GPTsModel(Model):
+class ChatGPT_AssistantModel(Model):
     def __init__(self):
         
         api_base = model_conf(const.OPEN_AI).get('api_base')
@@ -47,7 +47,8 @@ class GPTsModel(Model):
 
     def reply_text(self, query, user_id, retry_count=0):
         client = openai.OpenAI(api_key = model_conf(const.OPEN_AI).get('api_key'))
-        assistant_id = "asst_GCmVNWxwORfQlYHPOpLO8A1w"
+        assistant_id = model_conf(const.OPEN_AI).get('assistant_id')
+        
         try:
             
             thread = client.beta.threads.create()
@@ -70,13 +71,14 @@ class GPTsModel(Model):
                     messages = client.beta.threads.messages.list(
                         thread_id=thread.id
                         )
-                    last_id = messages.last_id
+                    first_id = messages.first_id
                     reply_content = ""
                     for item in messages.data:
-                        if item.id == last_id and item.role == "assistant":
+                        if item.id == first_id and item.role == "assistant" and item.content.type == "text":
                             for content_item in item.content:
                                 reply_content += content_item.text.value
                             log.info("[GPTs] reply={}", reply_content)
+
                             # save conversation
                             Session.save_session(query, reply_content, user_id)
                             return reply_content
