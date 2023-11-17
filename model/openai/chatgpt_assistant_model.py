@@ -19,12 +19,12 @@ class ChatGPT_AssistantModel(Model):
         proxy = model_conf(const.OPEN_AI).get('proxy')
         if proxy:
             openai.proxy = proxy
-        log.info("[GPTs] api_base={} proxy={}".format(
+        log.info("[ChatGPT_Assistant] api_base={} proxy={}".format(
             api_base, proxy))
     def reply(self, query, context=None):
         # acquire reply content
         if not context or not context.get('type') or context.get('type') == 'TEXT':
-            log.info("[GPTs] query={}".format(query))
+            log.info("[ChatGPT_Assistant] query={}".format(query))
             from_user_id = context['from_user_id']
             clear_memory_commands = common_conf_val('clear_memory_commands', ['#清除记忆'])
             if query in clear_memory_commands:
@@ -32,7 +32,7 @@ class ChatGPT_AssistantModel(Model):
                 return '记忆已清除'
 
             new_query = Session.build_session_query(query, from_user_id)
-            log.debug("[GPTs] session query={}".format(new_query))
+            log.debug("[ChatGPT_Assistant] session query={}".format(new_query))
 
             # if context.get('stream'):
             #     # reply in stream
@@ -48,36 +48,44 @@ class ChatGPT_AssistantModel(Model):
     def reply_text(self, query, user_id, retry_count=0):
         client = openai.OpenAI(api_key = model_conf(const.OPEN_AI).get('api_key'))
         assistant_id = model_conf(const.OPEN_AI).get('assistant_id')
-        
+        log.info("[ChatGPT_Assistant] assistant_id={}", assistant_id)
         try:
             
             thread = client.beta.threads.create()
+            log.info("[ChatGPT_Assistant] thread.id={}", thread.id)
+
             message = client.beta.threads.messages.create(
                 thread_id=thread.id,
                 role="user",
                 content=query
             )
+            log.info("[ChatGPT_Assistant] message_id={}", message.data[0].id)
+
             run = client.beta.threads.runs.create(
                 thread_id=thread.id,
                 assistant_id=assistant_id,
                 instructions=""
                 )
+            log.info("[ChatGPT_Assistant] run.id={}", run.id)
             while True:
                 run = client.beta.threads.runs.retrieve(
                     thread_id=thread.id,
                     run_id=run.id
                     )
+                log.info("[ChatGPT_Assistant] run.status={}", run.status)
+
                 if run.status == "completed":
                     messages = client.beta.threads.messages.list(
                         thread_id=thread.id
                         )
+                    log.info("[ChatGPT_Assistant] message_id={}", message.data[0].id)
                     first_id = messages.first_id
                     reply_content = ""
                     for item in messages.data:
                         if item.id == first_id and item.role == "assistant" and item.content.type == "text":
                             for content_item in item.content:
                                 reply_content += content_item.text.value
-                            log.info("[GPTs] reply={}", reply_content)
+                            log.info("[ChatGPT_Assistant] reply={}", reply_content)
 
                             # save conversation
                             Session.save_session(query, reply_content, user_id)
@@ -90,17 +98,17 @@ class ChatGPT_AssistantModel(Model):
             log.warn(e)
             if retry_count < 1:
                 time.sleep(5)
-                log.warn("[GPTs] RateLimit exceed, 第{}次重试".format(retry_count+1))
+                log.warn("[ChatGPT_Assistant] RateLimit exceed, 第{}次重试".format(retry_count+1))
                 return self.reply_text(query, user_id, retry_count+1)
             else:
                 return "提问太快啦，请休息一下再问我吧"
         except openai.error.APIConnectionError as e:
             log.warn(e)
-            log.warn("[GPTs] APIConnection failed")
+            log.warn("[ChatGPT_Assistant] APIConnection failed")
             return "我连接不到网络，请稍后重试"
         except openai.error.Timeout as e:
             log.warn(e)
-            log.warn("[GPTs] Timeout")
+            log.warn("[ChatGPT_Assistant] Timeout")
             return "我没有收到消息，请稍后重试"
         except Exception as e:
             # unknown exception
