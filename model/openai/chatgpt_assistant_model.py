@@ -19,34 +19,35 @@ class ChatGPT_AssistantModel(Model):
         proxy = model_conf(const.OPEN_AI).get('proxy')
         if proxy:
             openai.proxy = proxy
-        log.info("[ChatGPT_Assistant] api_base={} proxy={}".format(
-            api_base, proxy))
+        log.info("[ChatGPT_Assistant] api_base={} proxy={}".format(api_base, proxy))
     def reply(self, query, context=None):
         # acquire reply content
         if not context or not context.get('type') or context.get('type') == 'TEXT':
             log.info("[ChatGPT_Assistant] query={}".format(query))
-            from_user_id = context['from_user_id']
+            user_id = context['user_id']
+            log.info("[ChatGPT_Assistant] user_id={}".format(user_id))
             clear_memory_commands = common_conf_val('clear_memory_commands', ['#清除记忆'])
             if query in clear_memory_commands:
-                Session.clear_session(from_user_id)
+                Session.clear_session(user_id)
                 return '记忆已清除'
 
-            new_query = Session.build_session_query(query, from_user_id)
-            log.debug("[ChatGPT_Assistant] session query={}".format(new_query))
+            #new_query = Session.build_session_query(query, user_id)
+            #log.debug("[ChatGPT_Assistant] session new_query={}".format(new_query))
 
             # if context.get('stream'):
             #     # reply in stream
             #     return self.reply_text_stream(query, new_query, from_user_id)
 
-            reply_content = self.reply_text(new_query, from_user_id, 0)
+            reply_content = self.reply_text(query, user_id, 0)
             #log.debug("[CHATGPT] new_query={}, user={}, reply_cont={}".format(new_query, from_user_id, reply_content))
             return reply_content
 
-        elif context.get('type', None) == 'IMAGE_CREATE':
-            return self.create_img(query, 0)
+        #elif context.get('type', None) == 'IMAGE_CREATE':
+        #    return self.create_img(query, 0)
 
     def reply_text(self, query, user_id, retry_count=0):
         client = openai.OpenAI(api_key = model_conf(const.OPEN_AI).get('api_key'))
+        #log.info("[ChatGPT_Assistant] client has created")
         assistant_id = model_conf(const.OPEN_AI).get('assistant_id')
         log.info("[ChatGPT_Assistant] assistant_id={}", assistant_id)
         try:
@@ -93,7 +94,7 @@ class ChatGPT_AssistantModel(Model):
                 else:
                     time.sleep(1)
 
-        except openai.error.RateLimitError as e:
+        except openai.RateLimitError as e:
             # rate limit exception
             log.warn(e)
             if retry_count < 1:
@@ -102,11 +103,11 @@ class ChatGPT_AssistantModel(Model):
                 return self.reply_text(query, user_id, retry_count+1)
             else:
                 return "提问太快啦，请休息一下再问我吧"
-        except openai.error.APIConnectionError as e:
+        except openai.APIConnectionError as e:
             log.warn(e)
             log.warn("[ChatGPT_Assistant] APIConnection failed")
             return "我连接不到网络，请稍后重试"
-        except openai.error.Timeout as e:
+        except openai.Timeout as e:
             log.warn(e)
             log.warn("[ChatGPT_Assistant] Timeout")
             return "我没有收到消息，请稍后重试"
