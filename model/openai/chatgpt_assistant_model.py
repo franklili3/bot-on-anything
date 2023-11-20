@@ -33,13 +33,13 @@ class ChatGPT_AssistantModel(Model):
                 return '记忆已清除'
 
             new_query = Session.build_session_query(query, from_user_id)
-            log.debug("[ChatGPT_Assistant] session query={}".format(new_query))
+            log.debug("[ChatGPT_Assistant] session new_query={}".format(new_query))
 
             # if context.get('stream'):
             #     # reply in stream
             #     return self.reply_text_stream(query, new_query, from_user_id)
 
-            reply_content2 = self.reply_text(query, from_user_id, 0)
+            reply_content2 = self.reply_text(new_query, from_user_id, 0)
             log.debug("[ChatGPT_Assistant] reply_content2={}".format(reply_content2))
             return reply_content2
 
@@ -95,7 +95,8 @@ class ChatGPT_AssistantModel(Model):
 
             if reply_content1:
                 # save conversation
-                Session.save_session(query, reply_content1, user_id)
+                session = Session.save_session(query, reply_content1, user_id)
+                log.info("[ChatGPT_Assistant] session={}", session)
             return reply_content1
         except openai.error.RateLimitError as e:
             # rate limit exception
@@ -242,6 +243,7 @@ class Session(object):
             while len(session) > max_history_num * 2 + 1:
                 session.pop(1)
                 session.pop(1)
+        return session
 
     @staticmethod
     def clear_session(user_id):
