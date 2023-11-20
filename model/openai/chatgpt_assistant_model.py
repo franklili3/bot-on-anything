@@ -84,12 +84,14 @@ class ChatGPT_AssistantModel(Model):
                 )
             log.info("[ChatGPT_Assistant] messages_data[0]_id={}", messages.data[0].id)
             first_id = messages.first_id
+            log.info("[ChatGPT_Assistant] first_id={}", first_id)
             reply_content = ""
             for item in messages.data:
-                if item.id == first_id and item.role == "assistant" and item.content.type == "text":
+                if item.id == first_id and item.role == "assistant":
                     for content_item in item.content:
-                        reply_content += content_item.text.value
-                    log.info("[ChatGPT_Assistant] reply={}", reply_content)
+                        if content_item.content.type == "text":
+                            reply_content += content_item.text.value
+                    log.info("[ChatGPT_Assistant] reply_content={}", reply_content)
 
             if reply_content:
                 # save conversation
