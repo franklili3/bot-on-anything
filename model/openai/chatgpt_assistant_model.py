@@ -39,9 +39,9 @@ class ChatGPT_AssistantModel(Model):
             #     # reply in stream
             #     return self.reply_text_stream(query, new_query, from_user_id)
 
-            reply_content = self.reply_text(query, from_user_id, 0)
-            #log.debug("[ChatGPT_Assistant] new_query={}, user={}, reply_cont={}".format(new_query, from_user_id, reply_content))
-            return reply_content
+            reply_content2 = self.reply_text(query, from_user_id, 0)
+            log.debug("[ChatGPT_Assistant] reply_content2={}".format(reply_content2))
+            return reply_content2
 
         elif context.get('type', None) == 'IMAGE_CREATE':
             return self.create_img(query, 0)
@@ -85,18 +85,18 @@ class ChatGPT_AssistantModel(Model):
             log.info("[ChatGPT_Assistant] messages_data[0]_id={}", messages.data[0].id)
             first_id = messages.first_id
             log.info("[ChatGPT_Assistant] first_id={}", first_id)
-            reply_content = ""
+            reply_content1 = ""
             for item in messages.data:
                 if item.id == first_id and item.role == "assistant":
                     for content_item in item.content:
                         if content_item.type == "text":
-                            reply_content += content_item.text.value
-                    log.info("[ChatGPT_Assistant] reply_content={}", reply_content)
+                            reply_content1 += content_item.text.value
+                    log.info("[ChatGPT_Assistant] reply_content1={}", reply_content1)
 
-            if reply_content:
+            if reply_content1:
                 # save conversation
-                Session.save_session(query, reply_content, user_id)
-            return reply_content
+                Session.save_session(query, reply_content1, user_id)
+            return reply_content1
         except openai.error.RateLimitError as e:
             # rate limit exception
             log.warn(e)
