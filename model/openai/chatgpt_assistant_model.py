@@ -91,7 +91,7 @@ class ChatGPT_AssistantModel(Model):
                     for content_item in item.content:
                         if content_item.type == "text":
                             reply_content1 += content_item.text.value
-                    log.info("[ChatGPT_Assistant] reply_content1={}", reply_content1)
+            log.info("[ChatGPT_Assistant] reply_content1={}", reply_content1)
 
             if reply_content1:
                 # save conversation
