@@ -82,7 +82,7 @@ class ChatGPT_AssistantModel(Model):
             messages = client.beta.threads.messages.list(
                 thread_id=thread.id
                 )
-            log.info("[ChatGPT_Assistant] message_id={}", message.data[0].id)
+            log.info("[ChatGPT_Assistant] messages_data[0]_id={}", messages.data[0].id)
             first_id = messages.first_id
             reply_content = ""
             for item in messages.data:
