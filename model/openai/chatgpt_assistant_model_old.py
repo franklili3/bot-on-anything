@@ -9,41 +9,41 @@ import time
 
 user_session = dict()
 
-# OpenAI对话模型API (可用)
+# OpenAI Assistant模型API (可用)
 class ChatGPT_AssistantModel(Model):
     def __init__(self):
-        openai.api_key = model_conf(const.OPEN_AI).get('api_key')
+        
         api_base = model_conf(const.OPEN_AI).get('api_base')
         if api_base:
-            openai.api_base = api_base
+            openai.base_url = api_base
         proxy = model_conf(const.OPEN_AI).get('proxy')
         if proxy:
             openai.proxy = proxy
-        log.info("[ChatGPT_Assistant] api_base={} proxy={}".format(
-            api_base, proxy))
+        log.info("[ChatGPT_Assistant] api_base={} proxy={}".format(api_base, proxy))
     def reply(self, query, context=None):
         # acquire reply content
         if not context or not context.get('type') or context.get('type') == 'TEXT':
             log.info("[ChatGPT_Assistant] query={}".format(query))
-            from_user_id = context['from_user_id']
+            user_id = context['user_id']
+            log.info("[ChatGPT_Assistant] user_id={}".format(user_id))
             clear_memory_commands = common_conf_val('clear_memory_commands', ['#清除记忆'])
             if query in clear_memory_commands:
-                Session.clear_session(from_user_id)
+                #Session.clear_session(user_id)
                 return '记忆已清除'
 
-            new_query = Session.build_session_query(query, from_user_id)
-            log.debug("[ChatGPT_Assistant] session query={}".format(new_query))
+            #new_query = Session.build_session_query(query, user_id)
+            #log.debug("[ChatGPT_Assistant] session new_query={}".format(new_query))
 
             # if context.get('stream'):
             #     # reply in stream
             #     return self.reply_text_stream(query, new_query, from_user_id)
 
-            reply_content = self.reply_text(new_query, from_user_id, 0)
-            #log.debug("[ChatGPT_Assistant] new_query={}, user={}, reply_cont={}".format(new_query, from_user_id, reply_content))
+            reply_content = self.reply_text(query, user_id, 0)
+            #log.debug("[CHATGPT] new_query={}, user={}, reply_cont={}".format(new_query, from_user_id, reply_content))
             return reply_content
 
-        elif context.get('type', None) == 'IMAGE_CREATE':
-            return self.create_img(query, 0)
+        #elif context.get('type', None) == 'IMAGE_CREATE':
+        #    return self.create_img(query, 0)
 
     def reply_text(self, query, user_id, retry_count=0):
         api_key = model_conf(const.OPEN_AI).get('api_key')
@@ -59,6 +59,7 @@ class ChatGPT_AssistantModel(Model):
         #log.info("[ChatGPT_Assistant] client has created")
         assistant_id = model_conf(const.OPEN_AI).get('assistant_id')
         log.info("[ChatGPT_Assistant] assistant_id={}", assistant_id)            
+
         try:
             client = openai.OpenAI(api_key = api_key)
             thread = client.beta.threads.create()
@@ -89,11 +90,12 @@ class ChatGPT_AssistantModel(Model):
                         reply_content += content_item.text.value
                     log.info("[ChatGPT_Assistant] reply={}", reply_content)
 
-            if reply_content:
-                # save conversation
-                Session.save_session(query, reply_content, user_id)
-            return reply_content
-        except openai.error.RateLimitError as e:
+                    # save conversation
+                    #Session.save_session(query, reply_content, user_id)
+                    return reply_content
+
+
+        except openai.RateLimitError as e:
             # rate limit exception
             log.warn(e)
             if retry_count < 1:
@@ -102,21 +104,21 @@ class ChatGPT_AssistantModel(Model):
                 return self.reply_text(query, user_id, retry_count+1)
             else:
                 return "提问太快啦，请休息一下再问我吧"
-        except openai.error.APIConnectionError as e:
+        except openai.APIConnectionError as e:
             log.warn(e)
             log.warn("[ChatGPT_Assistant] APIConnection failed")
             return "我连接不到网络，请稍后重试"
-        except openai.error.Timeout as e:
+        except openai.Timeout as e:
             log.warn(e)
             log.warn("[ChatGPT_Assistant] Timeout")
             return "我没有收到消息，请稍后重试"
         except Exception as e:
             # unknown exception
             log.exception(e)
-            Session.clear_session(user_id)
+            #Session.clear_session(user_id)
             return "请再问我一次吧"
 
-
+'''
     async def reply_text_stream(self, query,  context, retry_count=0):
         try:
             user_id=context['from_user_id']
@@ -141,7 +143,7 @@ class ChatGPT_AssistantModel(Model):
                     full_response+=chunk_message
                 yield False,full_response
             Session.save_session(query, full_response, user_id)
-            log.info("[ChatGPT_Assistant]: reply={}", full_response)
+            log.info("[chatgpt]: reply={}", full_response)
             yield True,full_response
 
         except openai.error.RateLimitError as e:
@@ -149,17 +151,17 @@ class ChatGPT_AssistantModel(Model):
             log.warn(e)
             if retry_count < 1:
                 time.sleep(5)
-                log.warn("[ChatGPT_Assistant] RateLimit exceed, 第{}次重试".format(retry_count+1))
+                log.warn("[CHATGPT] RateLimit exceed, 第{}次重试".format(retry_count+1))
                 yield True, self.reply_text_stream(query, user_id, retry_count+1)
             else:
                 yield True, "提问太快啦，请休息一下再问我吧"
         except openai.error.APIConnectionError as e:
             log.warn(e)
-            log.warn("[ChatGPT_Assistant] APIConnection failed")
+            log.warn("[CHATGPT] APIConnection failed")
             yield True, "我连接不到网络，请稍后重试"
         except openai.error.Timeout as e:
             log.warn(e)
-            log.warn("[ChatGPT_Assistant] Timeout")
+            log.warn("[CHATGPT] Timeout")
             yield True, "我没有收到消息，请稍后重试"
         except Exception as e:
             # unknown exception
@@ -167,34 +169,11 @@ class ChatGPT_AssistantModel(Model):
             Session.clear_session(user_id)
             yield True, "请再问我一次吧"
 
-    def create_img(self, query, retry_count=0):
-        try:
-            log.info("[OPEN_AI] image_query={}".format(query))
-            response = openai.Image.create(
-                prompt=query,    #图片描述
-                n=1,             #每次生成图片的数量
-                size="256x256"   #图片大小,可选有 256x256, 512x512, 1024x1024
-            )
-            image_url = response['data'][0]['url']
-            log.info("[OPEN_AI] image_url={}".format(image_url))
-            return [image_url]
-        except openai.error.RateLimitError as e:
-            log.warn(e)
-            if retry_count < 1:
-                time.sleep(5)
-                log.warn("[OPEN_AI] ImgCreate RateLimit exceed, 第{}次重试".format(retry_count+1))
-                return self.reply_text(query, retry_count+1)
-            else:
-                return "提问太快啦，请休息一下再问我吧"
-        except Exception as e:
-            log.exception(e)
-            return None
-
 
 class Session(object):
     @staticmethod
     def build_session_query(query, user_id):
-        '''
+        
         build query with conversation history
         e.g.  [
             {"role": "system", "content": "You are a helpful assistant."},
@@ -205,7 +184,7 @@ class Session(object):
         :param query: query content
         :param user_id: from user id
         :return: query content with conversaction
-        '''
+        
         session = user_session.get(user_id, [])
         if len(session) == 0:
             system_prompt = model_conf(const.OPEN_AI).get("character_desc", "")
