@@ -24,8 +24,9 @@ class ChatGPT_AssistantModel(Model):
     def reply(self, query, context=None):
         # acquire reply content
         if not context or not context.get('type') or context.get('type') == 'TEXT':
-            log.info("[ChatGPT_Assistant] query={}".format(query))
+            log.info("[ChatGPT_Assistant] query1={}".format(query))
             from_user_id = context['from_user_id']
+            log.info("[ChatGPT_Assistant] from_user_id={}".format(from_user_id))
             clear_memory_commands = common_conf_val('clear_memory_commands', ['#清除记忆'])
             if query in clear_memory_commands:
                 Session.clear_session(from_user_id)
@@ -38,7 +39,7 @@ class ChatGPT_AssistantModel(Model):
             #     # reply in stream
             #     return self.reply_text_stream(query, new_query, from_user_id)
 
-            reply_content = self.reply_text(new_query, from_user_id, 0)
+            reply_content = self.reply_text(query, from_user_id, 0)
             #log.debug("[ChatGPT_Assistant] new_query={}, user={}, reply_cont={}".format(new_query, from_user_id, reply_content))
             return reply_content
 
@@ -48,6 +49,7 @@ class ChatGPT_AssistantModel(Model):
     def reply_text(self, query, user_id, retry_count=0):
         api_key = model_conf(const.OPEN_AI).get('api_key')
         log.info("[ChatGPT_Assistant] api_key={}", api_key)
+        log.info("[ChatGPT_Assistant] query2={}".format(query))
         def wait_on_run(run, thread):
             while run.status == "queued" or run.status == "in_progress":
                 run = client.beta.threads.runs.retrieve(
