@@ -89,7 +89,7 @@ class ChatGPT_AssistantModel(Model):
             for item in messages.data:
                 if item.id == first_id and item.role == "assistant":
                     for content_item in item.content:
-                        if content_item.content.type == "text":
+                        if content_item.type == "text":
                             reply_content += content_item.text.value
                     log.info("[ChatGPT_Assistant] reply_content={}", reply_content)
 
