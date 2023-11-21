@@ -21,7 +21,7 @@ class ChatGPT_AssistantModel(Model):
             openai.proxy = proxy
         log.info("[ChatGPT_Assistant] api_base={} proxy={}".format(
             api_base, proxy))
-    def reply(self, query, context=None):
+    def reply(self, query, context=None, retry_count=0):
         # acquire reply content
         if not context or not context.get('type') or context.get('type') == 'TEXT':
             #log.info("[ChatGPT_Assistant] query1={}".format(query))
@@ -31,8 +31,36 @@ class ChatGPT_AssistantModel(Model):
             if query in clear_memory_commands:
                 Session.clear_session(from_user_id)
                 return '记忆已清除'
-
-            new_query = Session.build_session_query(query, from_user_id)
+            
+            api_key = model_conf(const.OPEN_AI).get('api_key')
+            try:
+                client = openai.OpenAI(api_key = api_key)
+                thread = client.beta.threads.create()
+                thread_id = thread.id
+            except openai.error.RateLimitError as e:
+                # rate limit exception
+                log.warn(e)
+                if retry_count < 1:
+                    time.sleep(5)
+                    log.warn("[ChatGPT_Assistant] RateLimit exceed, 第{}次重试".format(retry_count+1))
+                    return self.reply_text(query, from_user_id, retry_count+1)
+                else:
+                    return "提问太快啦，请休息一下再问我吧"
+            except openai.error.APIConnectionError as e:
+                log.warn(e)
+                log.warn("[ChatGPT_Assistant] APIConnection failed")
+                return "我连接不到网络，请稍后重试"
+            except openai.error.Timeout as e:
+                log.warn(e)
+                log.warn("[ChatGPT_Assistant] Timeout")
+                return "我没有收到消息，请稍后重试"
+            except Exception as e:
+                # unknown exception
+                log.exception(e)
+                Session.clear_session(from_user_id)
+                return "请再问我一次吧"
+        
+            new_query = Session.build_session_query(query, from_user_id, thread_id)
             #log.debug("[ChatGPT_Assistant] session new_query={}".format(new_query))
 
             # if context.get('stream'):
@@ -63,8 +91,9 @@ class ChatGPT_AssistantModel(Model):
         #log.info("[ChatGPT_Assistant] assistant_id={}", assistant_id)            
         try:
             client = openai.OpenAI(api_key = api_key)
-            thread = client.beta.threads.create()
+            #thread = client.beta.threads.create()
             #log.info("[ChatGPT_Assistant] thread.id={}", thread.id)
+            thread_id = Session.get_thread_id(user_id)
 
             message = client.beta.threads.messages.create(
                 thread_id=thread.id,
@@ -198,10 +227,11 @@ class ChatGPT_AssistantModel(Model):
 
 class Session(object):
     @staticmethod
-    def build_session_query(query, user_id):
+    def build_session_query(query, user_id, thread_id):
         '''
         build query with conversation history
         e.g.  [
+            {"thread_id": thread_id},
             {"role": "system", "content": "You are a helpful assistant."},
             {"role": "user", "content": "Who won the world series in 2020?"},
             {"role": "assistant", "content": "The Los Angeles Dodgers won the World Series in 2020."},
@@ -212,6 +242,8 @@ class Session(object):
         :return: query content with conversaction
         '''
         session = user_session.get(user_id, [])
+        thread_id_item = {"thread_id": thread_id}
+        session.append(thread_id_item)
         if len(session) == 0:
             system_prompt = model_conf(const.OPEN_AI).get("character_desc", "")
             system_item = {'role': 'system', 'content': system_prompt}
@@ -249,3 +281,10 @@ class Session(object):
     def clear_session(user_id):
         user_session[user_id] = []
 
+    @staticmethod
+    def get_thread_id(user_id):
+        session = user_session.get(user_id)
+        for item in session:
+            if item[thread_id]:
+                thread_id = item[thread_id]
+        return thread_id
