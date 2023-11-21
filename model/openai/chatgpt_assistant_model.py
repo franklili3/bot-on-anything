@@ -39,7 +39,7 @@ class ChatGPT_AssistantModel(Model):
             #     # reply in stream
             #     return self.reply_text_stream(query, new_query, from_user_id)
 
-            reply_content2 = self.reply_text(new_query, from_user_id, 0)
+            reply_content2 = self.reply_text(query, from_user_id, 0)
             log.debug("[ChatGPT_Assistant] reply_content2={}".format(reply_content2))
             return reply_content2
 
