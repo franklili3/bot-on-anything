@@ -2,7 +2,7 @@
 
 import json
 import os
-
+from common.log import logger
 config = {}
 
 
@@ -57,3 +57,10 @@ def common_conf_val(key, default=None):
     if not config.get('common'):
         return default
     return config.get('common').get(key, default)
+
+def get_appdata_dir():
+    data_path = os.path.join(get_root(), conf().get("appdata_dir", ""))
+    if not os.path.exists(data_path):
+        logger.info("[INIT] data path not exists, create it: {}".format(data_path))
+        os.makedirs(data_path)
+    return data_path
