@@ -24,23 +24,23 @@ class ChatGPT_AssistantModel(Model):
     def reply(self, query, context=None):
         # acquire reply content
         if not context or not context.get('type') or context.get('type') == 'TEXT':
-            log.info("[ChatGPT_Assistant] query1={}".format(query))
+            #log.info("[ChatGPT_Assistant] query1={}".format(query))
             from_user_id = context['from_user_id']
-            log.info("[ChatGPT_Assistant] from_user_id={}".format(from_user_id))
+            #log.info("[ChatGPT_Assistant] from_user_id={}".format(from_user_id))
             clear_memory_commands = common_conf_val('clear_memory_commands', ['#清除记忆'])
             if query in clear_memory_commands:
                 Session.clear_session(from_user_id)
                 return '记忆已清除'
 
             new_query = Session.build_session_query(query, from_user_id)
-            log.debug("[ChatGPT_Assistant] session new_query={}".format(new_query))
+            #log.debug("[ChatGPT_Assistant] session new_query={}".format(new_query))
 
             # if context.get('stream'):
             #     # reply in stream
             #     return self.reply_text_stream(query, new_query, from_user_id)
 
             reply_content2 = self.reply_text(query, from_user_id, 0)
-            log.debug("[ChatGPT_Assistant] reply_content2={}".format(reply_content2))
+            #log.debug("[ChatGPT_Assistant] reply_content2={}".format(reply_content2))
             return reply_content2
 
         elif context.get('type', None) == 'IMAGE_CREATE':
@@ -48,8 +48,8 @@ class ChatGPT_AssistantModel(Model):
 
     def reply_text(self, query, user_id, retry_count=0):
         api_key = model_conf(const.OPEN_AI).get('api_key')
-        log.info("[ChatGPT_Assistant] api_key={}", api_key)
-        log.info("[ChatGPT_Assistant] query2={}".format(query))
+        #log.info("[ChatGPT_Assistant] api_key={}", api_key)
+        #log.info("[ChatGPT_Assistant] query2={}".format(query))
         def wait_on_run(run, thread):
             while run.status == "queued" or run.status == "in_progress":
                 run = client.beta.threads.runs.retrieve(
@@ -60,43 +60,43 @@ class ChatGPT_AssistantModel(Model):
             return run
         #log.info("[ChatGPT_Assistant] client has created")
         assistant_id = model_conf(const.OPEN_AI).get('assistant_id')
-        log.info("[ChatGPT_Assistant] assistant_id={}", assistant_id)            
+        #log.info("[ChatGPT_Assistant] assistant_id={}", assistant_id)            
         try:
             client = openai.OpenAI(api_key = api_key)
             thread = client.beta.threads.create()
-            log.info("[ChatGPT_Assistant] thread.id={}", thread.id)
+            #log.info("[ChatGPT_Assistant] thread.id={}", thread.id)
 
             message = client.beta.threads.messages.create(
                 thread_id=thread.id,
                 role="user",
                 content=query
             )
-            log.info("[ChatGPT_Assistant] message_id={}", message.id)
+            #log.info("[ChatGPT_Assistant] message_id={}", message.id)
 
             run = client.beta.threads.runs.create(
                 thread_id=thread.id,
                 assistant_id=assistant_id,
                 )
-            log.info("[ChatGPT_Assistant] run.id={}", run.id)
+            #log.info("[ChatGPT_Assistant] run.id={}", run.id)
             run = wait_on_run(run, thread)
             messages = client.beta.threads.messages.list(
                 thread_id=thread.id
                 )
-            log.info("[ChatGPT_Assistant] messages_data[0]_id={}", messages.data[0].id)
+            #log.info("[ChatGPT_Assistant] messages_data[0]_id={}", messages.data[0].id)
             first_id = messages.first_id
-            log.info("[ChatGPT_Assistant] first_id={}", first_id)
+            #log.info("[ChatGPT_Assistant] first_id={}", first_id)
             reply_content1 = ""
             for item in messages.data:
                 if item.id == first_id and item.role == "assistant":
                     for content_item in item.content:
                         if content_item.type == "text":
                             reply_content1 += content_item.text.value
-            log.info("[ChatGPT_Assistant] reply_content1={}", reply_content1)
+            #log.info("[ChatGPT_Assistant] reply_content1={}", reply_content1)
 
             if reply_content1:
                 # save conversation
                 session = Session.save_session(query, reply_content1, user_id)
-                log.info("[ChatGPT_Assistant] session={}", session)
+                #log.info("[ChatGPT_Assistant] session={}", session)
             return reply_content1
         except openai.error.RateLimitError as e:
             # rate limit exception
