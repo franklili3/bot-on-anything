@@ -12,11 +12,12 @@ from channel.channel import Channel
 from concurrent.futures import ThreadPoolExecutor
 from common.log import logger
 from common import const
-from config import channel_conf_val
+from common.expired_dict import ExpiredDict
+from config import channel_conf_val, conf, get_appdata_dir
 import requests
 from plugins.plugin_manager import *
 from common.sensitive_word import SensitiveWord
-
+import threading
 import io
 
 
@@ -34,18 +35,60 @@ def handler_group_msg(msg):
     WechatChannel().handle_group(msg)
     return None
 
+# 可用的二维码生成接口
+# https://api.qrserver.com/v1/create-qr-code/?size=400×400&data=https://www.abc.com
+# https://api.isoyu.com/qr/?m=1&e=L&p=20&url=https://www.abc.com
+def qrCallback(uuid, status, qrcode):
+    # logger.debug("qrCallback: {} {}".format(uuid,status))
+    if status == "0":
+        try:
+            from PIL import Image
 
+            img = Image.open(io.BytesIO(qrcode))
+            _thread = threading.Thread(target=img.show, args=("QRCode",))
+            _thread.setDaemon(True)
+            _thread.start()
+        except Exception as e:
+            pass
+
+        import qrcode
+
+        url = f"https://login.weixin.qq.com/l/{uuid}"
+
+        qr_api1 = "https://api.isoyu.com/qr/?m=1&e=L&p=20&url={}".format(url)
+        qr_api2 = "https://api.qrserver.com/v1/create-qr-code/?size=400×400&data={}".format(url)
+        qr_api3 = "https://api.pwmqr.com/qrcode/create/?url={}".format(url)
+        qr_api4 = "https://my.tv.sohu.com/user/a/wvideo/getQRCode.do?text={}".format(url)
+        print("You can also scan QRCode in any website below:")
+        print(qr_api3)
+        print(qr_api4)
+        print(qr_api2)
+        print(qr_api1)
+
+        qr = qrcode.QRCode(border=1)
+        qr.add_data(url)
+        qr.make(fit=True)
+        qr.print_ascii(invert=True)
+        
 class WechatChannel(Channel):
     def __init__(self):
-        pass
+        super().__init__()
+        self.receivedMsgs = ExpiredDict(60 * 60)
 
     def startup(self):
+        itchat.instance.receivingRetryCount = 600  # 修改断线超时时间
         # login by scan QRCode
-        hot_reload = channel_conf_val(const.WECHAT, 'hot_reload', True)
-        if channel_conf_val(const.WECHAT, 'receive_qrcode_api'):
-            itchat.auto_login(enableCmdQR=2, hotReload=hot_reload, qrCallback=self.login)
-        else:
-            itchat.auto_login(enableCmdQR=2, hotReload=hot_reload)
+        hotReload = conf().get("hot_reload", False)
+        status_path = os.path.join(get_appdata_dir(), "itchat.pkl")
+        itchat.auto_login(
+            enableCmdQR=2,
+            hotReload=hotReload,
+            statusStorageDir=status_path,
+            qrCallback=qrCallback,
+        )
+        self.user_id = itchat.instance.storageClass.userName
+        self.name = itchat.instance.storageClass.nickName
+        logger.info("Wechat login success, user_id: {}, nickname: {}".format(self.user_id, self.name))
 
         # start message listener
         itchat.run()
