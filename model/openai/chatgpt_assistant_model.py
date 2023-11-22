@@ -252,8 +252,8 @@ class Session(object):
                 Session.clear_session(user_id)
                 return "请再问我一次吧"
         else:
-            for item in session:
-                for key, value in item:
+            for dict in session:
+                for key, value in dict.items():
                     if key == "thread_id":
                         thread_id = value
         user_item = {'role': 'user', 'content': query}
