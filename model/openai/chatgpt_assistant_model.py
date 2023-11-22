@@ -253,8 +253,8 @@ class Session(object):
                 return "请再问我一次吧"
         else:
             for item in session:
-                if item[thread_id]:
-                    thread_id = item[thread_id]
+                if item["thread_id"]:
+                    thread_id = item["thread_id"]
         user_item = {'role': 'user', 'content': query}
         session.append(user_item)
         log.debug("[ChatGPT_Assistant] session2={}".format(session))
