@@ -12,18 +12,18 @@
 
 **应用：**
 
- - [x] [终端](https://github.com/zhayujie/bot-on-anything#1%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%BB%88%E7%AB%AF)
- - [x] [Web](https://github.com/zhayujie/bot-on-anything#9web)
- - [x] [个人微信](https://github.com/zhayujie/bot-on-anything#2%E4%B8%AA%E4%BA%BA%E5%BE%AE%E4%BF%A1)
- - [x] [订阅号](https://github.com/zhayujie/bot-on-anything#3%E4%B8%AA%E4%BA%BA%E8%AE%A2%E9%98%85%E5%8F%B7)
- - [x] [服务号](https://github.com/zhayujie/bot-on-anything#4%E4%BC%81%E4%B8%9A%E6%9C%8D%E5%8A%A1%E5%8F%B7)
- - [x] [企业微信](https://github.com/zhayujie/bot-on-anything#12%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1)
- - [x] [Telegram](https://github.com/zhayujie/bot-on-anything#6telegram)
- - [x] [QQ](https://github.com/zhayujie/bot-on-anything#5qq)
- - [x] [钉钉](https://github.com/zhayujie/bot-on-anything#10%E9%92%89%E9%92%89)
- - [x] [飞书](https://github.com/zhayujie/bot-on-anything#11%E9%A3%9E%E4%B9%A6)
- - [x] [Gmail](https://github.com/zhayujie/bot-on-anything#7gmail)
- - [x] [Slack](https://github.com/zhayujie/bot-on-anything#8slack)
+ - [x] [终端](https://github.com/franklili3/bot-on-anything#1%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%BB%88%E7%AB%AF)
+ - [x] [Web](https://github.com/franklili3/bot-on-anything#9web)
+ - [x] [个人微信](https://github.com/franklili3/bot-on-anything#2%E4%B8%AA%E4%BA%BA%E5%BE%AE%E4%BF%A1)
+ - [x] [订阅号](https://github.com/franklili3/bot-on-anything#3%E4%B8%AA%E4%BA%BA%E8%AE%A2%E9%98%85%E5%8F%B7)
+ - [x] [服务号](https://github.com/franklili3/bot-on-anything#4%E4%BC%81%E4%B8%9A%E6%9C%8D%E5%8A%A1%E5%8F%B7)
+ - [x] [企业微信](https://github.com/franklili3/bot-on-anything#12%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1)
+ - [x] [Telegram](https://github.com/franklili3/bot-on-anything#6telegram)
+ - [x] [QQ](https://github.com/franklili3/bot-on-anything#5qq)
+ - [x] [钉钉](https://github.com/franklili3/bot-on-anything#10%E9%92%89%E9%92%89)
+ - [x] [飞书](https://github.com/franklili3/bot-on-anything#11%E9%A3%9E%E4%B9%A6)
+ - [x] [Gmail](https://github.com/franklili3/bot-on-anything#7gmail)
+ - [x] [Slack](https://github.com/franklili3/bot-on-anything#8slack)
 
 # 快速开始
 

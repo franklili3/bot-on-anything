@@ -32,56 +32,29 @@ class ChatGPT_AssistantModel(Model):
                 Session.clear_session(from_user_id)
                 return '记忆已清除'
             
-            api_key = model_conf(const.OPEN_AI).get('api_key')
-            try:
-                client = openai.OpenAI(api_key = api_key)
-                thread = client.beta.threads.create()
-                thread_id = thread.id
-            except openai.error.RateLimitError as e:
-                # rate limit exception
-                log.warn(e)
-                if retry_count < 1:
-                    time.sleep(5)
-                    log.warn("[ChatGPT_Assistant] RateLimit exceed, 第{}次重试".format(retry_count+1))
-                    return self.reply_text(query, from_user_id, retry_count+1)
-                else:
-                    return "提问太快啦，请休息一下再问我吧"
-            except openai.error.APIConnectionError as e:
-                log.warn(e)
-                log.warn("[ChatGPT_Assistant] APIConnection failed")
-                return "我连接不到网络，请稍后重试"
-            except openai.error.Timeout as e:
-                log.warn(e)
-                log.warn("[ChatGPT_Assistant] Timeout")
-                return "我没有收到消息，请稍后重试"
-            except Exception as e:
-                # unknown exception
-                log.exception(e)
-                Session.clear_session(from_user_id)
-                return "请再问我一次吧"
         
-            new_query = Session.build_session_query(query, from_user_id, thread_id)
-            #log.debug("[ChatGPT_Assistant] session new_query={}".format(new_query))
+            thread_id = Session.build_session_query(query, from_user_id)
+            log.debug("[ChatGPT_Assistant] thread_id2={}".format(thread_id))
 
             # if context.get('stream'):
             #     # reply in stream
             #     return self.reply_text_stream(query, new_query, from_user_id)
 
-            reply_content2 = self.reply_text(query, from_user_id, 0)
-            #log.debug("[ChatGPT_Assistant] reply_content2={}".format(reply_content2))
+            reply_content2 = self.reply_text(query, from_user_id, thread_id, 0)
+            log.debug("[ChatGPT_Assistant] reply_content2={}".format(reply_content2))
             return reply_content2
 
         elif context.get('type', None) == 'IMAGE_CREATE':
             return self.create_img(query, 0)
 
-    def reply_text(self, query, user_id, retry_count=0):
+    def reply_text(self, query, user_id, thread_id, retry_count=0):
         api_key = model_conf(const.OPEN_AI).get('api_key')
         #log.info("[ChatGPT_Assistant] api_key={}", api_key)
         #log.info("[ChatGPT_Assistant] query2={}".format(query))
-        def wait_on_run(run, thread):
+        def wait_on_run(run, thread_id):
             while run.status == "queued" or run.status == "in_progress":
                 run = client.beta.threads.runs.retrieve(
-                    thread_id=thread.id,
+                    thread_id=thread_id,
                     run_id=run.id,
                 )
                 time.sleep(0.5)
@@ -93,25 +66,25 @@ class ChatGPT_AssistantModel(Model):
             client = openai.OpenAI(api_key = api_key)
             #thread = client.beta.threads.create()
             #log.info("[ChatGPT_Assistant] thread.id={}", thread.id)
-            thread_id = Session.get_thread_id(user_id)
+            #thread_id = Session.get_thread_id(user_id)
 
             message = client.beta.threads.messages.create(
-                thread_id=thread.id,
+                thread_id=thread_id,
                 role="user",
                 content=query
             )
-            #log.info("[ChatGPT_Assistant] message_id={}", message.id)
+            log.info("[ChatGPT_Assistant] message_id={}", message.id)
 
             run = client.beta.threads.runs.create(
-                thread_id=thread.id,
+                thread_id=thread_id,
                 assistant_id=assistant_id,
                 )
-            #log.info("[ChatGPT_Assistant] run.id={}", run.id)
-            run = wait_on_run(run, thread)
+            log.info("[ChatGPT_Assistant] run.id={}", run.id)
+            run = wait_on_run(run, thread_id)
             messages = client.beta.threads.messages.list(
-                thread_id=thread.id
+                thread_id=thread_id
                 )
-            #log.info("[ChatGPT_Assistant] messages_data[0]_id={}", messages.data[0].id)
+            log.info("[ChatGPT_Assistant] messages_data[0]_id={}", messages.data[0].id)
             first_id = messages.first_id
             #log.info("[ChatGPT_Assistant] first_id={}", first_id)
             reply_content1 = ""
@@ -120,12 +93,12 @@ class ChatGPT_AssistantModel(Model):
                     for content_item in item.content:
                         if content_item.type == "text":
                             reply_content1 += content_item.text.value
-            #log.info("[ChatGPT_Assistant] reply_content1={}", reply_content1)
+            log.info("[ChatGPT_Assistant] reply_content1={}", reply_content1)
 
             if reply_content1:
                 # save conversation
                 session = Session.save_session(query, reply_content1, user_id)
-                #log.info("[ChatGPT_Assistant] session={}", session)
+                log.info("[ChatGPT_Assistant] session3={}", session)
             return reply_content1
         except openai.error.RateLimitError as e:
             # rate limit exception
@@ -227,7 +200,7 @@ class ChatGPT_AssistantModel(Model):
 
 class Session(object):
     @staticmethod
-    def build_session_query(query, user_id, thread_id):
+    def build_session_query(query, user_id, retry_count=0):
         '''
         build query with conversation history
         e.g.  [
@@ -242,16 +215,50 @@ class Session(object):
         :return: query content with conversaction
         '''
         session = user_session.get(user_id, [])
-        thread_id_item = {"thread_id": thread_id}
-        session.append(thread_id_item)
         if len(session) == 0:
             system_prompt = model_conf(const.OPEN_AI).get("character_desc", "")
             system_item = {'role': 'system', 'content': system_prompt}
             session.append(system_item)
             user_session[user_id] = session
+            api_key = model_conf(const.OPEN_AI).get('api_key')
+            try:
+                client = openai.OpenAI(api_key = api_key)
+                thread = client.beta.threads.create()
+                thread_id = thread.id
+                log.debug("[ChatGPT_Assistant] thread_id1={}".format(thread_id))
+                thread_id_item = {"thread_id": thread_id}
+                session.append(thread_id_item)
+                log.debug("[ChatGPT_Assistant] session1={}".format(session))
+            except openai.error.RateLimitError as e:
+                # rate limit exception
+                log.warn(e)
+                if retry_count < 1:
+                    time.sleep(5)
+                    log.warn("[ChatGPT_Assistant] RateLimit exceed, 第{}次重试".format(retry_count+1))
+                    return self.reply_text(query, user_id, retry_count+1)
+                else:
+                    return "提问太快啦，请休息一下再问我吧"
+            except openai.error.APIConnectionError as e:
+                log.warn(e)
+                log.warn("[ChatGPT_Assistant] APIConnection failed")
+                return "我连接不到网络，请稍后重试"
+            except openai.error.Timeout as e:
+                log.warn(e)
+                log.warn("[ChatGPT_Assistant] Timeout")
+                return "我没有收到消息，请稍后重试"
+            except Exception as e:
+                # unknown exception
+                log.exception(e)
+                Session.clear_session(user_id)
+                return "请再问我一次吧"
+        else:
+            for item in session:
+                if item[thread_id]:
+                    thread_id = item[thread_id]
         user_item = {'role': 'user', 'content': query}
         session.append(user_item)
-        return session
+        log.debug("[ChatGPT_Assistant] session2={}".format(session))
+        return thread_id
 
     @staticmethod
     def save_session(query, answer, user_id, used_tokens=0):
@@ -280,11 +287,3 @@ class Session(object):
     @staticmethod
     def clear_session(user_id):
         user_session[user_id] = []
-
-    @staticmethod
-    def get_thread_id(user_id):
-        session = user_session.get(user_id)
-        for item in session:
-            if item[thread_id]:
-                thread_id = item[thread_id]
-        return thread_id
