@@ -212,7 +212,7 @@ class Session(object):
         ]
         :param query: query content
         :param user_id: from user id
-        :return: query content with conversaction
+        :return: thread_id
         '''
         session = user_session.get(user_id, [])
         if len(session) == 0:
@@ -225,10 +225,10 @@ class Session(object):
                 client = openai.OpenAI(api_key = api_key)
                 thread = client.beta.threads.create()
                 thread_id = thread.id
-                log.debug("[ChatGPT_Assistant] thread_id1={}".format(thread_id))
+                log.info("[ChatGPT_Assistant] thread_id1={}".format(thread_id))
                 thread_id_item = {"thread_id": thread_id}
                 session.append(thread_id_item)
-                log.debug("[ChatGPT_Assistant] session1={}".format(session))
+                log.info("[ChatGPT_Assistant] session1={}".format(session))
             except openai.error.RateLimitError as e:
                 # rate limit exception
                 log.warn(e)
@@ -257,7 +257,7 @@ class Session(object):
                     thread_id = item["thread_id"]
         user_item = {'role': 'user', 'content': query}
         session.append(user_item)
-        log.debug("[ChatGPT_Assistant] session2={}".format(session))
+        log.info("[ChatGPT_Assistant] session2={}".format(session))
         return thread_id
 
     @staticmethod
